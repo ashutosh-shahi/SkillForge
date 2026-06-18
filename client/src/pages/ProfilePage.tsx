@@ -213,251 +213,242 @@ const handleAddProject =
       );
     }
   };
-  return (
-    <div>
-      <h1>Profile</h1>
+return (
+  <div className="min-h-screen bg-slate-100 p-8">
+    <div className="max-w-6xl mx-auto">
 
-      <h2>{profile.name}</h2>
+      <div className="bg-white rounded-3xl shadow-lg p-8 mb-8">
+        <h1 className="text-4xl font-bold">
+          {profile.name}
+        </h1>
 
-      <p>Email: {profile.email}</p>
+        <p className="text-slate-500 mt-2">
+          {profile.email}
+        </p>
+      </div>
 
-      <div>
-  <h3>Bio</h3>
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
 
-  <textarea
-    rows={4}
-    value={bio}
-    onChange={(e) =>
-      setBio(
-        e.target.value
-      )
-    }
-  />
-</div>
+        <div className="bg-white rounded-3xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">
+            Bio
+          </h3>
 
-      <div>
-  <h3>Skills</h3>
+          <textarea
+            rows={5}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            className="w-full border rounded-xl p-3"
+          />
+        </div>
 
-  <input
-    type="text"
-    value={skills}
-    onChange={(e) =>
-      setSkills(
-        e.target.value
-      )
-    }
-  />
+        <div className="bg-white rounded-3xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">
+            Skills
+          </h3>
 
-  <p>
-    Example:
-    Java, React, MongoDB
-  </p>
-</div>
+          <input
+            type="text"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
+            className="w-full border rounded-xl p-3"
+          />
 
-      <ul>
-        {profile.skills.map(
-          (
-            skill: string,
-            index: number
-          ) => (
-            <li key={index}>
-              {skill}
-            </li>
+          <p className="text-sm text-slate-500 mt-3">
+            Example: Java, React, MongoDB
+          </p>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {profile.skills.map(
+              (skill: string, index: number) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
+                >
+                  {skill}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
+        <h3 className="text-xl font-semibold mb-4">
+          Education
+        </h3>
+
+        {profile.education.map(
+          (edu: any, index: number) => (
+            <div
+              key={index}
+              className="border-b py-4"
+            >
+              <h4 className="font-semibold">
+                {edu.degree}
+              </h4>
+
+              <p>{edu.institution}</p>
+
+              <p className="text-slate-500">
+                {edu.startYear} - {edu.endYear}
+              </p>
+            </div>
           )
         )}
-      </ul>
-
-      <h3>Education</h3>
-
-      {profile.education.map(
-        (
-          edu: any,
-          index: number
-        ) => (
-          <div key={index}>
-            <p>
-              {edu.degree}
-            </p>
-
-            <p>
-              {edu.institution}
-            </p>
-
-            <p>
-              {edu.startYear} -
-              {edu.endYear}
-            </p>
-          </div>
-        )
-      )}
-      <br />
-      <h3>Add Project</h3>
-
-<input
-  type="text"
-  placeholder="Project Title"
-  value={projectTitle}
-  onChange={(e) =>
-    setProjectTitle(
-      e.target.value
-    )
-  }
-/>
-
-<br />
-<br />
-
-<textarea
-  placeholder="Description"
-  value={
-    projectDescription
-  }
-  onChange={(e) =>
-    setProjectDescription(
-      e.target.value
-    )
-  }
-/>
-
-<br />
-<br />
-
-<input
-  type="text"
-  placeholder="GitHub URL"
-  value={githubUrl}
-  onChange={(e) =>
-    setGithubUrl(
-      e.target.value
-    )
-  }
-/>
-
-<br />
-<br />
-
-<input
-  type="text"
-  placeholder="Live URL"
-  value={liveUrl}
-  onChange={(e) =>
-    setLiveUrl(
-      e.target.value
-    )
-  }
-/>
-
-<br />
-<br />
-
-<input
-  type="text"
-  placeholder="React, Node, MongoDB"
-  value={technologies}
-  onChange={(e) =>
-    setTechnologies(
-      e.target.value
-    )
-  }
-/>
-
-<br />
-<br />
-
-<button
-  onClick={
-    handleAddProject
-  }
->
-  Add Project
-</button>
-
-<br />
-<br />
-      <h3>Projects</h3>
-
-{profile.projects &&
-profile.projects.length > 0 ? (
-  profile.projects.map(
-    (
-      project: any,
-      index: number
-    ) => (
-      <div
-        key={index}
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          marginBottom: "10px",
-        }}
-      >
-        <h4>
-          {project.title}
-        </h4>
-
-        <p>
-          {
-            project.description
-          }
-        </p>
-
-        <p>
-          Technologies:
-          {" "}
-          {project.technologies?.join(
-            ", "
-          )}
-        </p>
-
-        <p>
-          GitHub:
-          {" "}
-          <a
-            href={
-              project.githubUrl
-            }
-            target="_blank"
-          >
-            {
-              project.githubUrl
-            }
-          </a>
-        </p>
-
-        <p>
-          Live:
-          {" "}
-          <a
-            href={
-              project.liveUrl
-            }
-            target="_blank"
-          >
-            {project.liveUrl}
-          </a>
-          
-        </p>
-        <button
-          onClick={() =>
-            handleDeleteProject(index)
-          }
-        >
-          Delete Project
-        </button>
       </div>
-    )
-  )
-) : (
-  <p>
-    No Projects Added
-  </p>
-)}
 
-<button
-  onClick={handleSave}
->
-  Save Profile
-</button>
+      <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
+        <h3 className="text-xl font-semibold mb-4">
+          Add Project
+        </h3>
+
+        <div className="grid gap-4">
+
+          <input
+            type="text"
+            placeholder="Project Title"
+            value={projectTitle}
+            onChange={(e) =>
+              setProjectTitle(e.target.value)
+            }
+            className="border rounded-xl p-3"
+          />
+
+          <textarea
+            placeholder="Description"
+            value={projectDescription}
+            onChange={(e) =>
+              setProjectDescription(
+                e.target.value
+              )
+            }
+            className="border rounded-xl p-3"
+          />
+
+          <input
+            type="text"
+            placeholder="GitHub URL"
+            value={githubUrl}
+            onChange={(e) =>
+              setGithubUrl(e.target.value)
+            }
+            className="border rounded-xl p-3"
+          />
+
+          <input
+            type="text"
+            placeholder="Live URL"
+            value={liveUrl}
+            onChange={(e) =>
+              setLiveUrl(e.target.value)
+            }
+            className="border rounded-xl p-3"
+          />
+
+          <input
+            type="text"
+            placeholder="React, Node, MongoDB"
+            value={technologies}
+            onChange={(e) =>
+              setTechnologies(
+                e.target.value
+              )
+            }
+            className="border rounded-xl p-3"
+          />
+
+          <button
+            onClick={handleAddProject}
+            className="bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+          >
+            Add Project
+          </button>
+
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
+        <h3 className="text-xl font-semibold mb-4">
+          Projects
+        </h3>
+
+        {profile.projects &&
+        profile.projects.length > 0 ? (
+          <div className="grid gap-4">
+
+            {profile.projects.map(
+              (
+                project: any,
+                index: number
+              ) => (
+                <div
+                  key={index}
+                  className="border rounded-2xl p-5"
+                >
+                  <h4 className="text-lg font-semibold">
+                    {project.title}
+                  </h4>
+
+                  <p className="mt-2">
+                    {project.description}
+                  </p>
+
+                  <p className="mt-2">
+                    Technologies:{" "}
+                    {project.technologies?.join(
+                      ", "
+                    )}
+                  </p>
+
+                  <div className="mt-3 flex flex-col gap-2">
+
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                    >
+                      GitHub
+                    </a>
+
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                    >
+                      Live Demo
+                    </a>
+
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      handleDeleteProject(
+                        index
+                      )
+                    }
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-xl"
+                  >
+                    Delete
+                  </button>
+
+                </div>
+              )
+            )}
+
+          </div>
+        ) : (
+          <p>No Projects Added</p>
+        )}
+      </div>
+
+      <button
+        onClick={handleSave}
+        className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+      >
+        Save Profile
+      </button>
+
     </div>
-  );
+  </div>
+);
 }

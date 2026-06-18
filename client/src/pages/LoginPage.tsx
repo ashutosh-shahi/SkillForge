@@ -43,10 +43,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+  <div className="min-h-screen flex items-center justify-center bg-slate-100">
+    <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
 
-      <form onSubmit={handleSubmit}>
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-slate-900">
+          SkillForge
+        </h1>
+
+        <p className="text-slate-500 mt-2">
+          Welcome back
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+      >
         <input
           type="email"
           placeholder="Email"
@@ -54,27 +67,29 @@ export default function LoginPage() {
           onChange={(e) =>
             setEmail(e.target.value)
           }
+          className="w-full p-3 border rounded-xl"
         />
-
-        <br />
-        <br />
 
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) =>
-            setPassword(e.target.value)
+            setPassword(
+              e.target.value
+            )
           }
+          className="w-full p-3 border rounded-xl"
         />
 
-        <br />
-        <br />
-
-        <button type="submit">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
+        >
           Login
         </button>
       </form>
     </div>
-  );
+  </div>
+);
 }

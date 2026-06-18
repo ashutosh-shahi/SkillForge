@@ -4,20 +4,88 @@ import { useAuthStore } from "../store/authStore";
 export default function DashboardPage() {
   const { user } = useAuthStore();
 
+  const skillsCount = 4; // temporary
+  const projectsCount = 1; // temporary
+  const educationCount = 1; // temporary
+
   return (
-    <div>
+    <div className="min-h-screen bg-slate-100">
       <Navbar />
 
-      <h1>SkillForge Dashboard</h1>
+      <div className="max-w-6xl mx-auto p-8">
 
-      {user ? (
-        <>
-          <h2>Welcome, {user.name}</h2>
-          <p>{user.email}</p>
-        </>
-      ) : (
-        <p>Not Logged In</p>
-      )}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-3xl p-10 shadow-lg mb-8">
+          <h1 className="text-5xl font-bold mb-3">
+            SkillForge
+          </h1>
+
+          {user && (
+            <>
+              <h2 className="text-2xl font-semibold">
+                Welcome back, {user.name}
+              </h2>
+
+              <p className="text-blue-100 mt-2">
+                {user.email}
+              </p>
+            </>
+          )}
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h3 className="text-slate-500 text-sm uppercase">
+              Skills
+            </h3>
+
+            <p className="text-4xl font-bold mt-2">
+              {skillsCount}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h3 className="text-slate-500 text-sm uppercase">
+              Projects
+            </h3>
+
+            <p className="text-4xl font-bold mt-2">
+              {projectsCount}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h3 className="text-slate-500 text-sm uppercase">
+              Education
+            </h3>
+
+            <p className="text-4xl font-bold mt-2">
+              {educationCount}
+            </p>
+          </div>
+
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-lg p-8">
+          <h2 className="text-2xl font-semibold mb-4">
+            Profile Completion
+          </h2>
+
+          <div className="w-full bg-slate-200 rounded-full h-4">
+            <div
+              className="bg-blue-600 h-4 rounded-full"
+              style={{
+                width: "80%",
+              }}
+            />
+          </div>
+
+          <p className="mt-3 text-slate-500">
+            Your profile is 80% complete.
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
