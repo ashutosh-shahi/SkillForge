@@ -32,3 +32,13 @@ export const updateProfile =
 
     return res.data;
   };
+
+  export const getPublicProfile =
+  async (id: string) => {
+    const response =
+      await api.get(
+        `/users/${id}`
+      );
+
+    return response.data;
+  };

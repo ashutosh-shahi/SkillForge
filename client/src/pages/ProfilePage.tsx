@@ -297,6 +297,21 @@ return (
         <p className="text-slate-500 mt-2">
           {profile.email}
         </p>
+
+        <div className="mt-4">
+          <p className="text-slate-500">
+            Public Portfolio
+          </p>
+
+          <a
+            href={`/user/${profile._id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            View Portfolio
+          </a>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
