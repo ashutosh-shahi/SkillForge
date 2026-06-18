@@ -1,12 +1,64 @@
 import Navbar from "../components/Navbar";
 import { useAuthStore } from "../store/authStore";
+import { useEffect, useState } from "react";
+import { getProfile } from "../api/userApi";
 
 export default function DashboardPage() {
-  const { user } = useAuthStore();
+  
+  const { user, token } = useAuthStore();
 
-  const skillsCount = 4; // temporary
-  const projectsCount = 1; // temporary
-  const educationCount = 1; // temporary
+  const [profile, setProfile] =
+  useState<any>(null);
+  useEffect(() => {
+  const fetchProfile = async () => {
+    if (!token) return;
+
+    try {
+      const data = await getProfile(token);
+
+      setProfile(data.user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchProfile();
+}, [token]);
+  const skillsCount =
+  profile?.skills?.length || 0;
+
+  const projectsCount =
+    profile?.projects?.length || 0;
+
+  const educationCount =
+    profile?.education?.length || 0;
+
+  let completion = 0;
+
+if (
+  profile?.bio &&
+  profile.bio.trim() !== ""
+) {
+  completion += 25;
+}
+
+if (
+  profile?.skills?.length > 0
+) {
+  completion += 25;
+}
+
+if (
+  profile?.education?.length > 0
+) {
+  completion += 25;
+}
+
+if (
+  profile?.projects?.length > 0
+) {
+  completion += 25;
+}
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -75,13 +127,13 @@ export default function DashboardPage() {
             <div
               className="bg-blue-600 h-4 rounded-full"
               style={{
-                width: "80%",
+                width: `${completion}%`,
               }}
             />
           </div>
 
           <p className="mt-3 text-slate-500">
-            Your profile is 80% complete.
+            Your profile is {completion}% complete.
           </p>
         </div>
 

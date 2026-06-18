@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
+import Toast from "../components/Toast";
 import {
   getProfile,
   updateProfile,
@@ -8,12 +9,16 @@ import {
 export default function ProfilePage() {
   const { token } = useAuthStore();
   console.log("Token:", token);
-
+  const [editingIndex, setEditingIndex] =
+  useState<number | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
   const [projectTitle, setProjectTitle] =
   useState("");
+  const [toast, setToast] =
+  useState("");
+
 
 const [
   projectDescription,
@@ -30,7 +35,7 @@ const [
   technologies,
   setTechnologies,
 ] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
   if (!token) return;
@@ -87,9 +92,13 @@ const handleSave = async () => {
       updatedData.user
     );
 
-    alert(
+    setToast(
       "Profile Updated"
     );
+
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   } catch (error) {
     console.error(error);
 
@@ -100,7 +109,15 @@ const handleSave = async () => {
 };
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="bg-white px-8 py-6 rounded-3xl shadow-lg">
+          <h2 className="text-xl font-semibold">
+            Loading Profile...
+          </h2>
+        </div>
+      </div>
+    );
   }
 
   if (!profile) {
@@ -125,6 +142,24 @@ const handleAddProject =
             )
             .filter(Boolean),
       };
+      let updatedProjects;
+
+if (
+  editingIndex !== null
+) {
+  updatedProjects = [
+    ...profile.projects,
+  ];
+
+  updatedProjects[
+    editingIndex
+  ] = newProject;
+} else {
+  updatedProjects = [
+    ...profile.projects,
+    newProject,
+  ];
+}
 
       const updatedData =
         await updateProfile(
@@ -137,10 +172,8 @@ const handleAddProject =
               profile.avatar,
             education:
               profile.education,
-            projects: [
-              ...profile.projects,
-              newProject,
-            ],
+            projects:
+              updatedProjects,
           }
         );
 
@@ -153,10 +186,17 @@ const handleAddProject =
       setGithubUrl("");
       setLiveUrl("");
       setTechnologies("");
+      setEditingIndex(null);
 
-      alert(
-        "Project Added"
+      setToast(
+        editingIndex !== null
+          ? "Project Updated"
+          : "Project Added"
       );
+
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
     } catch (error) {
       console.error(error);
 
@@ -165,6 +205,30 @@ const handleAddProject =
       );
     }
   };
+  const handleEditProject = (
+  project: any,
+  index: number
+) => {
+  setProjectTitle(project.title);
+
+  setProjectDescription(
+    project.description
+  );
+
+  setGithubUrl(
+    project.githubUrl
+  );
+
+  setLiveUrl(
+    project.liveUrl
+  );
+
+  setTechnologies(
+    project.technologies.join(", ")
+  );
+
+  setEditingIndex(index);
+};
   const handleDeleteProject =
   async (
     projectIndex: number
@@ -202,9 +266,13 @@ const handleAddProject =
         updatedData.user
       );
 
-      alert(
-        "Project Deleted"
-      );
+      setToast(
+          "Project Deleted"
+        );
+
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
     } catch (error) {
       console.error(error);
 
@@ -216,6 +284,10 @@ const handleAddProject =
 return (
   <div className="min-h-screen bg-slate-100 p-8">
     <div className="max-w-6xl mx-auto">
+
+      {toast && (
+        <Toast message={toast} />
+      )}
 
       <div className="bg-white rounded-3xl shadow-lg p-8 mb-8">
         <h1 className="text-4xl font-bold">
@@ -361,9 +433,11 @@ return (
 
           <button
             onClick={handleAddProject}
-            className="bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
-          >
-            Add Project
+        className="bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+      >
+        {editingIndex !== null
+          ? "Update Project"
+          : "Add Project"}
           </button>
 
         </div>
@@ -419,6 +493,17 @@ return (
                     </a>
 
                   </div>
+                  <button
+                    onClick={() =>
+                      handleEditProject(
+                        project,
+                        index
+                      )
+                    }
+                    className="mt-4 mr-3 bg-amber-500 text-white px-4 py-2 rounded-xl"
+                  >
+                    Edit
+                  </button>
 
                   <button
                     onClick={() =>
@@ -437,7 +522,15 @@ return (
 
           </div>
         ) : (
-          <p>No Projects Added</p>
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-slate-700">
+              No Projects Yet
+            </h3>
+
+            <p className="text-slate-500 mt-3">
+              Add your first project to showcase your work.
+            </p>
+          </div>
         )}
       </div>
 

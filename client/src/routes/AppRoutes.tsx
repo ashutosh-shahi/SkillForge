@@ -5,6 +5,7 @@ import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 
+
 export default function AppRoutes() {
   return (
     <Routes>

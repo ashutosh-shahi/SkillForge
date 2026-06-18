@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { loginUser } from "../api/authApi";
 import { useAuthStore } from "../store/authStore";
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       setAuth(data.token, data.user);
 
-      alert("Login Successful");
+      
 
       navigate("/");
     } catch (error: any) {
@@ -89,6 +89,15 @@ export default function LoginPage() {
           Login
         </button>
       </form>
+      <p className="mt-6 text-center text-slate-500">
+        Don't have an account?{" "}
+        <Link
+          to="/register"
+          className="text-blue-600 font-medium"
+        >
+          Register
+        </Link>
+      </p>
     </div>
   </div>
 );
