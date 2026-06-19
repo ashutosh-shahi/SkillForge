@@ -16,6 +16,15 @@ export default function ProfilePage() {
   const [skills, setSkills] = useState("");
   const [projectTitle, setProjectTitle] =
   useState("");
+  const [education, setEducation] =
+  useState({
+    institution: "",
+    degree: "",
+    startYear: "",
+    endYear: "",
+  });
+  
+  
   const [toast, setToast] =
   useState("");
 
@@ -205,6 +214,71 @@ if (
       );
     }
   };
+  const handleAddEducation =
+  async () => {
+    try {
+      if (!token) return;
+
+      const newEducation = {
+        institution:
+          education.institution,
+        degree:
+          education.degree,
+        startYear: Number(
+          education.startYear
+        ),
+        endYear: Number(
+          education.endYear
+        ),
+      };
+
+      const updatedEducation = [
+        ...(profile.education || []),
+        newEducation,
+      ];
+
+      const updatedData =
+        await updateProfile(
+          token,
+          {
+            bio,
+            skills:
+              profile.skills,
+            avatar:
+              profile.avatar,
+            education:
+              updatedEducation,
+            projects:
+              profile.projects,
+          }
+        );
+
+      setProfile(
+        updatedData.user
+      );
+
+      setEducation({
+        institution: "",
+        degree: "",
+        startYear: "",
+        endYear: "",
+      });
+
+      setToast(
+        "Education Added"
+      );
+
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Failed To Add Education"
+      );
+    }
+  };
   const handleEditProject = (
   project: any,
   index: number
@@ -362,29 +436,139 @@ return (
       </div>
 
       <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-        <h3 className="text-xl font-semibold mb-4">
-          Education
-        </h3>
+  <h3 className="text-xl font-semibold mb-4">
+    Education
+  </h3>
 
-        {profile.education.map(
-          (edu: any, index: number) => (
-            <div
-              key={index}
-              className="border-b py-4"
-            >
-              <h4 className="font-semibold">
-                {edu.degree}
-              </h4>
+  <div className="grid gap-4 mb-6">
 
-              <p>{edu.institution}</p>
+    <input
+      type="text"
+      placeholder="Institution"
+      value={education.institution}
+      onChange={(e) =>
+        setEducation({
+          ...education,
+          institution:
+            e.target.value,
+        })
+      }
+      className="border rounded-xl p-3"
+    />
 
-              <p className="text-slate-500">
-                {edu.startYear} - {edu.endYear}
-              </p>
-            </div>
-          )
-        )}
-      </div>
+    <input
+      type="text"
+      placeholder="Degree"
+      value={education.degree}
+      onChange={(e) =>
+        setEducation({
+          ...education,
+          degree:
+            e.target.value,
+        })
+      }
+      className="border rounded-xl p-3"
+    />
+
+    <select
+  value={education.startYear}
+  onChange={(e) =>
+    setEducation({
+      ...education,
+      startYear: e.target.value,
+    })
+  }
+  className="border rounded-xl p-3"
+>
+  <option value="">
+    Select Start Year
+  </option>
+
+  {Array.from(
+    { length: 26 },
+    (_, i) => 2010 + i
+  ).map((year) => (
+    <option
+      key={year}
+      value={year}
+    >
+      {year}
+    </option>
+  ))}
+</select>
+
+    <select
+  value={education.endYear}
+  onChange={(e) =>
+    setEducation({
+      ...education,
+      endYear: e.target.value,
+    })
+  }
+  className="border rounded-xl p-3"
+>
+  <option value="">
+    Select End Year
+  </option>
+
+  {Array.from(
+    { length: 26 },
+    (_, i) => 2010 + i
+  ).map((year) => (
+    <option
+      key={year}
+      value={year}
+    >
+      {year}
+    </option>
+  ))}
+</select>
+
+    <button
+      onClick={
+        handleAddEducation
+      }
+      className="bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+    >
+      Add Education
+    </button>
+
+  </div>
+
+  {profile.education &&
+  profile.education.length >
+    0 ? (
+    profile.education.map(
+      (
+        edu: any,
+        index: number
+      ) => (
+        <div
+          key={index}
+          className="border-b py-4"
+        >
+          <h4 className="font-semibold">
+            {edu.degree}
+          </h4>
+
+          <p>
+            {edu.institution}
+          </p>
+
+          <p className="text-slate-500">
+            {edu.startYear}
+            {" - "}
+            {edu.endYear}
+          </p>
+        </div>
+      )
+    )
+  ) : (
+    <p className="text-slate-500">
+      No education added yet.
+    </p>
+  )}
+</div>
 
       <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4">
@@ -457,6 +641,7 @@ return (
 
         </div>
       </div>
+      
 
       <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4">
