@@ -5,6 +5,8 @@ import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import PublicProfilePage from "../pages/PublicProfilePage";
+import HomePage from "../pages/HomePage";
+
 
 export default function AppRoutes() {
   return (
@@ -12,6 +14,11 @@ export default function AppRoutes() {
 
       <Route
         path="/"
+        element={<HomePage />}
+      />
+
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <DashboardPage />

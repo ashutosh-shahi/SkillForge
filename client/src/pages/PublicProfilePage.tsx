@@ -11,6 +11,8 @@ export default function PublicProfilePage() {
   const [loading, setLoading] =
     useState(true);
 
+  
+
   useEffect(() => {
     const fetchProfile =
       async () => {

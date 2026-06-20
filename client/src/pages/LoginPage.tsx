@@ -27,7 +27,7 @@ export default function LoginPage() {
 
       
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Login Error:", error);
 
