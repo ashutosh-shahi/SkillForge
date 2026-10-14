@@ -16,41 +16,69 @@ export default function RegisterPage() {
   const [password, setPassword] =
     useState("");
 
-  const [toast, setToast] =
-    useState("");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (
     e: FormEvent
   ) => {
     e.preventDefault();
 
+    if (!name.trim() || !email.trim() || !password) {
+      setToast({
+        message: "Please fill in all fields",
+        type: "error",
+      });
+      setTimeout(() => setToast(null), 3000);
+      return;
+    }
+
+    if (password.length < 6) {
+      setToast({
+        message: "Password must be at least 6 characters long",
+        type: "error",
+      });
+      setTimeout(() => setToast(null), 3000);
+      return;
+    }
+
+    setLoading(true);
+
     try {
       await api.post(
         "/auth/register",
         {
-          name,
-          email,
+          name: name.trim(),
+          email: email.trim(),
           password,
         }
       );
 
-      setToast(
-        "Account Created Successfully"
-      );
+      setToast({
+        message: "Account Created Successfully! Redirecting...",
+        type: "success",
+      });
 
       setTimeout(() => {
         navigate("/login");
-      }, 1000);
-    } catch (error) {
-      console.error(error);
+      }, 1200);
+    } catch (error: any) {
+      console.error("Registration error:", error);
 
-      setToast(
-        "Registration Failed"
-      );
+      const serverMessage =
+        error?.response?.data?.message ||
+        "Registration Failed. Please try again.";
+
+      setToast({
+        message: serverMessage,
+        type: "error",
+      });
 
       setTimeout(() => {
-        setToast("");
-      }, 3000);
+        setToast(null);
+      }, 4000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +86,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
 
       {toast && (
-        <Toast message={toast} />
+        <Toast message={toast.message} type={toast.type} />
       )}
 
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
@@ -79,44 +107,51 @@ export default function RegisterPage() {
           <input
             type="text"
             placeholder="Name"
+            required
+            disabled={loading}
             value={name}
             onChange={(e) =>
               setName(
                 e.target.value
               )
             }
-            className="w-full p-3 border rounded-xl"
+            className="w-full p-3 border rounded-xl disabled:bg-slate-50"
           />
 
           <input
             type="email"
             placeholder="Email"
+            required
+            disabled={loading}
             value={email}
             onChange={(e) =>
               setEmail(
                 e.target.value
               )
             }
-            className="w-full p-3 border rounded-xl"
+            className="w-full p-3 border rounded-xl disabled:bg-slate-50"
           />
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Password (min. 6 characters)"
+            required
+            disabled={loading}
             value={password}
             onChange={(e) =>
               setPassword(
                 e.target.value
               )
             }
-            className="w-full p-3 border rounded-xl"
+            className="w-full p-3 border rounded-xl disabled:bg-slate-50"
           />
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
           >
-            Register
+            {loading ? "Creating Account..." : "Register"}
           </button>
 
         </form>

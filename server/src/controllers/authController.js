@@ -6,13 +6,28 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Please fill in all fields (name, email, and password)",
+      });
+    }
+
+    const cleanEmail = String(email).toLowerCase().trim();
+    const cleanName = String(name).trim();
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters long",
+      });
+    }
+
     const existingUser = await User.findOne({
-      email,
+      email: cleanEmail,
     });
 
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists",
+        message: "User already exists with this email",
       });
     }
 
@@ -20,18 +35,29 @@ const register = async (req, res) => {
       await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
       password: hashedPassword,
     });
 
     res.status(201).json({
       success: true,
-      user,
+      message: "Account created successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
+    console.error("Registration error:", error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "User already exists with this email",
+      });
+    }
     res.status(500).json({
-      message: error.message,
+      message: error.message || "Registration failed",
     });
   }
 };
@@ -39,8 +65,16 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Please provide both email and password",
+      });
+    }
+
+    const cleanEmail = String(email).toLowerCase().trim();
+
     const user = await User.findOne({
-      email,
+      email: cleanEmail,
     });
 
     if (!user) {

@@ -1,9 +1,12 @@
 import Navbar from "../components/Navbar";
+import PortfolioDoctor from "../components/PortfolioDoctor";
 import { useAuthStore } from "../store/authStore";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProfile } from "../api/userApi";
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   
   const { user, token } = useAuthStore();
 
@@ -118,7 +121,7 @@ if (
 
         </div>
 
-        <div className="bg-white rounded-3xl shadow-lg p-8">
+        <div className="bg-white rounded-3xl shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-semibold mb-4">
             Profile Completion
           </h2>
@@ -136,6 +139,13 @@ if (
             Your profile is {completion}% complete.
           </p>
         </div>
+
+        {/* AI Portfolio Doctor */}
+        <PortfolioDoctor
+          token={token}
+          profile={profile}
+          onNavigateToProfile={() => navigate("/profile")}
+        />
 
       </div>
     </div>

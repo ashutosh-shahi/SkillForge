@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const userRoutes = require("./routes/userRoutes");
 
 const authRoutes = require("./routes/authRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 const app = express();
 connectDB();
@@ -30,6 +31,7 @@ console.log("authRoutes =", authRoutes);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
   res.json({
